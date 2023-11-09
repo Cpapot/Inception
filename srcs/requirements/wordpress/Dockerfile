@@ -1,14 +1,23 @@
 FROM debian:buster
 
+EXPOSE	9000
+
 #Update docker
-RUN apt-get update -y && apt-get install
+RUN apt-get update -y && apt-get upgrade -y
 
 #Setting up the docker
-RUN apt-get -y install wget && apt-get -y install vim
+RUN apt-get -y install wget && apt-get -y install vim && apt-get -y install curl
 RUN apt-get install -y php7.3 php-fpm php-mysql mariadb-client
-RUN wget https://fr.wordpress.org/wordpress-6.0-fr_FR.tar.gz -P /var/www
 
 #Setting up wordpress
-RUN cd /var/www && tar -xzf wordpress-6.0-fr_FR.tar.gz && rm wordpress-6.0-fr_FR.tar.gz
-RUN chown -R root:root /var/www/wordpress
-COPY conf/wp-config.php /var/www/wordpress/wp-config.php
+RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+RUN chmod +x wp-cli.phar
+RUN		cp wp-cli.phar /usr/bin/wp
+
+COPY conf/www.conf /etc/php/7.3/fpm/pool.d
+
+COPY conf/configWP.sh ./configWP.sh
+RUN chmod 777 ./configWP.sh
+ENTRYPOINT [ "./configWP.sh" ]
+
+CMD		["/usr/sbin/php-fpm7.3", "--nodaemonize"]
