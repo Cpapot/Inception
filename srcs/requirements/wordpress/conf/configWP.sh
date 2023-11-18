@@ -5,6 +5,7 @@ chown -R 755 /var/www/*;
 mkdir -p /run/php/;
 touch /run/php/php7.3-fpm.pid;
 
+#checking that WordPress is not already config, if not config it
 if [ ! -f /var/www/html/wp-config.php ]; then
 		mkdir -p /var/www/html
 		cd /var/www/html

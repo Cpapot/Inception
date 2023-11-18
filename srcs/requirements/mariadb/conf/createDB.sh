@@ -1,14 +1,10 @@
 #!/bin/bash
-#db_name = Database Name
-#db_user = User
-#db_pwd = User Password
 
+#This script config & start mariaDB
 service mysql start;
 
-if [ ! -d "/var/lib/mysql/$SQL_DB_NAME" ]; then
-	echo "[First MySQL configuration]"
-
-	echo -e "mysql_secure_installation..."
+#checking that mariaDB is not already config, if not config it
+if [ ! -d "/var/lib/mysql/$SQL_DATABASE" ]; then
 	mysql_secure_installation << EOF
 
 	n
@@ -29,8 +25,8 @@ EOF
 	mysql < db1.sql
 	echo -e "DataBase created"
 fi
-echo -e "Restarting mysql"
+
+#starting mariaDB
 mysqladmin -u root -p$SQL_ROOT_PASSWORD shutdown
 
-echo -e "DataBase restarted"
 exec "$@"
