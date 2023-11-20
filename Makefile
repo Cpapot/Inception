@@ -1,15 +1,40 @@
+#var
+
+COMPOSE = docker compose -f srcs/docker-compose.yml
+
+DATA_PATH	= ${HOME}/data
+WP_PATH		= ${HOME}/data/wordpress
+DB_PATH		= ${HOME}/data/mariadb
+
 all:
-	mkdir -p ${HOME}/data
-	mkdir -p ${HOME}/data/wordpress
-	mkdir -p ${HOME}/data/mariadb
-	docker compose -f ./srcs/docker-compose.yml up --detach
+	${MAKE} data
+	${MAKE} up
+
+up:
+	$(COMPOSE) up --build
 
 down:
-	@docker compose -f ./srcs/docker-compose.yml down
+	$(COMPOSE) down
+
+stop:
+	$(COMPOSE) stop
+
+restart:
+	$(COMPOSE) restart
 
 clean:
-	@docker stop nginx wordpress mariadb 2>/dev/null || true
-	@docker rm nginx wordpress mariadb 2>/dev/null || true
-	@docker volume rm db wp 2>/dev/null || true
-	@docker rmi srcs-nginx srcs-wordpress srcs-mariadb 2>/dev/null || true
-	@docker network rm inception 2>/dev/null || true
+	$(COMPOSE) down --volumes --rmi all
+
+fclean: clean
+	rm -rf ${WP_PATH} ${DB_PATH}
+
+re: fclean
+	${MAKE} all
+
+data:
+	mkdir -p ${DATA_PATH}
+	mkdir -p ${DB_PATH}
+	mkdir -p ${WP_PATH}
+
+.PHONY: re fclean clean restart stop down up all data
+

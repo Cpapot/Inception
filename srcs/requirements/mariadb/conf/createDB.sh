@@ -1,32 +1,22 @@
-#!/bin/bash
+#!/bin/sh
 
-#This script config & start mariaDB
-service mysql start;
+sed -i 's|MYSQL_DATABASE|'${SQL_DATABASE}'|g' /tmp/init.sql
+sed -i 's|MYSQL_USER|'${SQL_USER}'|g' /tmp/init.sql
+sed -i 's|MYSQL_PASSWORD|'${SQL_PASSWORD}'|g' /tmp/init.sql
+sed -i 's|MYSQL_ROOT_PASSWORD|'${SQL_ROOT_PASSWORD}'|g' /tmp/init.sql
+sed -i 's|MYSQL_PORT|'3306'|g' /etc/mysql/my.cnf
+sed -i 's|MYSQL_ADDRESS|'0.0.0.0'|g' /etc/mysql/my.cnf
 
-#checking that mariaDB is not already config, if not config it
-if [ ! -d "/var/lib/mysql/$SQL_DATABASE" ]; then
-	mysql_secure_installation << EOF
+#if [ -d "/var/lib/mysql/$SQL_DATABASE" ]
 
-	n
-	y
-	y
-	y
-	y
-EOF
+#then
+  #echo "Database already exists."
+  #mysqld_safe
+#else
+  mkdir /run/mysqld
+  mysql_install_db
+  mysqld --user=root --init-file="/tmp/init.sql"
 
-	echo -e "Creating DataBase"
-	echo "CREATE DATABASE IF NOT EXISTS \`${SQL_DATABASE}\`;" > db1.sql
-	echo "CREATE USER IF NOT EXISTS \`${SQL_USER}\`@'localhost' IDENTIFIED BY '${SQL_PASSWORD}';" >> db1.sql
-	echo "GRANT ALL PRIVILEGES ON \`${SQL_DATABASE}\`.* TO \`${SQL_USER}\`@'%' ;" >> db1.sql
-	echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '${SQL_ROOT_PASSWORD}';FLUSH PRIVILEGES;" >> db1.sql
-	echo "FLUSH PRIVILEGES;" >> db1.sql
-	echo "ALTER USER 'root'@'localhost' IDENTIFIED BY '$SQL_ROOT_PASSWORD';" >> db1.sql
-
-	mysql < db1.sql
-	echo -e "DataBase created"
-fi
-
-#starting mariaDB
-mysqladmin -u root -p$SQL_ROOT_PASSWORD shutdown
+#fi
 
 exec "$@"
