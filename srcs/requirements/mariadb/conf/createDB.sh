@@ -10,8 +10,8 @@ sed -i 's|MYSQL_ADDRESS|'0.0.0.0'|g' /etc/mysql/my.cnf
 #if [ -d "/var/lib/mysql/$SQL_DATABASE" ]
 
 #then
-  #echo "Database already exists."
-  #mysqld_safe
+#  echo "Database already exists."
+#  mysqld_safe
 #else
   mkdir /run/mysqld
   mysql_install_db

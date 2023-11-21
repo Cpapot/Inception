@@ -8,6 +8,7 @@ RUN apt-get update -y && apt-get upgrade -y
 #Setting up the docker
 RUN apt-get -y install wget && apt-get -y install vim && apt-get -y install curl
 RUN apt-get install -y php7.3 php-fpm php-mysql mariadb-client
+RUN rm -rf /var/lib/apt/lists/*
 
 COPY conf/www.conf /etc/php/7.3/fpm/pool.d/www.conf
 
