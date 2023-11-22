@@ -16,17 +16,14 @@ up:
 down:
 	$(COMPOSE) down
 
-stop:
-	$(COMPOSE) stop
-
 restart:
 	$(COMPOSE) restart
 
-clean:
+clean: 
 	$(COMPOSE) down --volumes --rmi all
 
 fclean: clean
-	rm -rf ${WP_PATH} ${DB_PATH}
+	rm -rf ${DATA_PATH}
 
 re: fclean
 	${MAKE} all
@@ -36,5 +33,5 @@ data:
 	mkdir -p ${DB_PATH}
 	mkdir -p ${WP_PATH}
 
-.PHONY: re fclean clean restart stop down up all data
+.PHONY: re fclean clean restart down up all data
 
