@@ -15,5 +15,3 @@ fi
 
 mysql_install_db --datadir=/var/lib/mysql
 mysqld --user=root --init-file="/tmp/init.sql"
-
-exec "$@"

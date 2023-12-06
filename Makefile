@@ -1,5 +1,3 @@
-#var
-
 COMPOSE = docker compose -f srcs/docker-compose.yml
 
 DATA_PATH	= ${HOME}/data
@@ -19,11 +17,8 @@ down:
 restart:
 	$(COMPOSE) restart
 
-clean: 
+clean:
 	$(COMPOSE) down --volumes --rmi all
-
-fclean: clean
-	rm -rf ${DATA_PATH}
 
 re: fclean
 	${MAKE} all
